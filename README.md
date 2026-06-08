@@ -11,15 +11,13 @@ Este repositório contém o **sistema legado de controle de estoque** (desenvolv
 
 ## Integrantes do Grupo
 
-| Nome | RA | Papel sugerido |
+| Nome | RA |
 |------|-----|----------------|
 | Marcos Antonio Gasperin | 10724265643 | Líder de equipe |
 | Guilherme Custodio Capote | 10724269158 | Desenvolvedor / Testes |
 | Lucas Matheus de Amarante | 10724112695 | Desenvolvedor / Testes |
 | André Ghizoni Pereira Silva | 1072316272 | Testador |
 | João Vitor Cardoso de Jesus | 10724266837 | Especialista DevOps (CI/CD e SonarCloud) |
-
-> Todos os integrantes devem programar testes unitários e realizar commits individuais no código-fonte, conforme o edital da A3.
 
 ---
 
@@ -58,6 +56,8 @@ A3-Desempenho-de-compreens-o/
 ├── web-app/                # Módulo web (WAR para Tomcat)
 ├── docs/                   # Documentação técnica
 ├── ControleEstoque.sql     # Script do banco de dados
+├── .github/workflows/      # CI com GitHub Actions
+├── sonar-project.properties # Configuração SonarCloud
 ├── pom.xml                 # Dependências, testes e JaCoCo
 ├── LICENSE
 └── README.md
@@ -173,11 +173,11 @@ A meta da A3 é atingir **≥ 75% de cobertura** nas classes de modelo, DAO, con
 
 | Integrante | Funcionalidade | Arquivo(s) de teste |
 |------------|----------------|---------------------|
-| Marcos Antonio Gasperin | Categorias (modelo/DAO) | `src/test/java/modelo/CategoriaTest.java` |
-| Guilherme Custodio Capote | Produtos (modelo/DAO) | `src/test/java/modelo/ProdutoTest.java` |
-| Lucas Matheus de Amarante | Movimentações | `src/test/java/modelo/MovimentacaoTest.java` |
-| André Ghizoni Pereira Silva | Servlets / controllers web | `src/test/java/controller/` |
-| João Vitor Cardoso de Jesus | API REST + CI/SonarCloud | `src/test/java/controller/rest/` |
+| Marcos Antonio Gasperin | Categorias (modelo/DAO) | `CategoriaTest.java`, `CategoriaDAOTest.java` |
+| Guilherme Custodio Capote | Produtos (modelo/DAO) | `ProdutoTest.java`, `ProdutoDAOTest.java` |
+| Lucas Matheus de Amarante | Movimentações | `MovimentacaoTest.java`, `MovimentacaoDAOTest.java` |
+| André Ghizoni Pereira Silva | Servlets / controllers web | `src/test/java/controller/*Test.java` |
+| João Vitor Cardoso de Jesus | API REST + CI/SonarCloud | `src/test/java/controller/rest/*Test.java`, `.github/`, `sonar-project.properties` |
 
 > Cada integrante deve commitar **apenas os arquivos de código-fonte que desenvolveu**, com mensagens claras e atômicas.
 
@@ -190,21 +190,21 @@ A meta da A3 é atingir **≥ 75% de cobertura** nas classes de modelo, DAO, con
 | **JUnit 5** | Testes unitários | Configurado no `pom.xml` |
 | **Mockito** | Mocks e isolamento de dependências | Configurado no `pom.xml` |
 | **JaCoCo** | Medição de cobertura de código | Configurado no `pom.xml` |
-| **GitHub Actions** | CI — testes automáticos a cada push | A configurar |
-| **SonarCloud** | Análise estática e quality gate | A configurar |
+| **GitHub Actions** | CI — testes automáticos a cada push | `.github/workflows/ci.yml` |
+| **SonarCloud** | Análise estática e quality gate | `sonar-project.properties` |
 
-### Análise estática com SonarCloud (quando configurado)
+### Configurar SonarCloud (uma vez)
 
-1. Criar projeto em [sonarcloud.io](https://sonarcloud.io) vinculado ao repositório GitHub
-2. Gerar token de autenticação
-3. Executar localmente:
+1. Criar conta em [sonarcloud.io](https://sonarcloud.io) e importar este repositório GitHub
+2. Confirmar `projectKey` e `organization` em `sonar-project.properties` (padrão: `bulinrutss` / `bulinrutss_A3-Desempenho-de-compreens-o`)
+3. Gerar token em **My Account → Security**
+4. No GitHub: **Settings → Secrets and variables → Actions** → criar secret `SONAR_TOKEN` com o token
+5. Após o primeiro push na `main`, a CI roda testes + análise SonarCloud automaticamente
+
+### Executar análise localmente (opcional)
 
 ```bash
-mvn clean verify sonar:sonar \
-  -Dsonar.projectKey=SEU_PROJECT_KEY \
-  -Dsonar.organization=SUA_ORGANIZACAO \
-  -Dsonar.host.url=https://sonarcloud.io \
-  -Dsonar.login=SEU_TOKEN
+mvn clean verify sonar:sonar -Dsonar.login=SEU_TOKEN
 ```
 
 ---
