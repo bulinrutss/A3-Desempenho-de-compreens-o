@@ -18,6 +18,20 @@ class CategoriaTest {
     }
 
     @Test
+    void deveCriarCategoriaVaziaComConstrutorPadrao() {
+        Categoria categoria = new Categoria();
+
+        categoria.setId(3);
+        categoria.setNome("Higiene");
+        categoria.setTamanho("200ml");
+        categoria.setEmbalagem("Frasco");
+
+        assertEquals(3, categoria.getId());
+        assertEquals("Higiene", categoria.getNome());
+        assertEquals("Higiene", categoria.toString());
+    }
+
+    @Test
     void deveAtualizarAtributosComSetters() {
         Categoria categoria = new Categoria();
 
