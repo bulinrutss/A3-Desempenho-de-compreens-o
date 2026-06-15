@@ -140,6 +140,7 @@ O painel do projeto é **público** e atualizado automaticamente pela CI a cada 
 - **Organização:** `bulinrutss`
 - **Project key:** `bulinrutss_A3-Desempenho-de-compreens-o`
 - **CI:** GitHub Actions (testes + análise SonarCloud)
+- **Evolução do quality gate:** [docs/EVOLUCAO-SONARCLOUD.md](./docs/EVOLUCAO-SONARCLOUD.md)
 
 ---
 
@@ -197,6 +198,7 @@ java -jar target/ControleEstoque-1.0-jar-with-dependencies.jar
 
 ## Documentação Técnica
 
+- [Evolução SonarCloud / Quality Gate](./docs/EVOLUCAO-SONARCLOUD.md)
 - [Arquitetura](./docs/ARQUITETURA.md)
 - [Projeto Completo](./docs/PROJETO-COMPLETO.md)
 - [API REST](./docs/API-REST-DOCUMENTACAO.md)
