@@ -11,13 +11,13 @@ Este repositório contém o **sistema legado de controle de estoque** (desenvolv
 
 ## Integrantes do Grupo
 
-| Nome | RA |
-|------|-----|----------------|
-| Marcos Antonio Gasperin | 10724265643 | Líder de equipe |
-| Guilherme Custodio Capote | 10724269158 | Desenvolvedor / Testes |
-| Lucas Matheus de Amarante | 10724112695 | Desenvolvedor / Testes |
-| André Ghizoni Pereira Silva | 1072316272 | Testador |
-| João Vitor Cardoso de Jesus | 10724266837 | Especialista DevOps (CI/CD e SonarCloud) |
+| Nome | RA | GitHub | Papel |
+|------|-----|--------|-------|
+| Marcos Antonio Gasperin | 10724265643 | [@bulinrutss](https://github.com/bulinrutss) | Líder de equipe |
+| Guilherme Custodio Capote | 10724269158 | [@Gcapote45](https://github.com/Gcapote45) | Desenvolvedor / Testes |
+| Lucas Matheus de Amarante | 10724112695 | [@mathlucs](https://github.com/mathlucs) | Desenvolvedor / Testes |
+| André Ghizoni Pereira Silva | 1072316272 | [@ghizoniandre-byte](https://github.com/ghizoniandre-byte) | Testador |
+| João Vitor Cardoso de Jesus | 10724266837 | [@C4rdos027](https://github.com/C4rdos027) | Especialista DevOps (CI/CD e SonarCloud) |
 
 ---
 
@@ -57,119 +57,57 @@ A3-Desempenho-de-compreens-o/
 ├── docs/                   # Documentação técnica
 ├── ControleEstoque.sql     # Script do banco de dados
 ├── .github/workflows/      # CI com GitHub Actions
-├── sonar-project.properties # Configuração SonarCloud
-├── pom.xml                 # Dependências, testes e JaCoCo
+├── sonar-project.properties
+├── pom.xml
 ├── LICENSE
 └── README.md
 ```
 
 ---
 
-## O que instalar (pré-requisitos)
-
-### Obrigatório para desenvolver e rodar testes
+## Pré-requisitos
 
 | Software | Versão mínima | Para quê |
 |----------|---------------|----------|
 | **Java JDK** | 8+ | Compilar e executar o projeto |
 | **Apache Maven** | 3.6+ | Build, dependências e testes |
 | **Git** | 2.x | Controle de versão |
+| **MySQL** | 8.0+ | Banco de dados (sistema completo) |
+| **Apache Tomcat** | 9.0+ | Deploy web e API REST |
 
-### Obrigatório para rodar o sistema completo (não para testes unitários básicos)
-
-| Software | Versão mínima | Para quê |
-|----------|---------------|----------|
-| **MySQL** | 8.0+ | Banco de dados em produção/desenvolvimento |
-| **Apache Tomcat** | 9.0+ | Deploy da aplicação web e API REST |
-
-### Recomendado
-
-| Software | Para quê |
-|----------|----------|
-| **IntelliJ IDEA** ou **VS Code** + Extension Pack for Java | Editar código e executar testes pela IDE |
-| **Conta GitHub** | Commits individuais e CI/CD |
-| **Conta SonarCloud** | Análise estática e quality gate |
-
----
-
-## Instalação passo a passo (Windows)
-
-### 1. Clonar o repositório
+**Clonar e preparar o projeto:**
 
 ```bash
 git clone https://github.com/bulinrutss/A3-Desempenho-de-compreens-o.git
 cd A3-Desempenho-de-compreens-o
-```
-
-### 2. Verificar Java e Maven
-
-```bash
-java -version
-mvn -version
-```
-
-Saída esperada: Java 8 (ou superior) e Maven 3.6+.
-
-**Instalar Java (se necessário):** [Adoptium Temurin JDK 8](https://adoptium.net/)  
-**Instalar Maven (se necessário):** [Apache Maven](https://maven.apache.org/download.cgi) — adicione `MAVEN_HOME` e `%MAVEN_HOME%\bin` ao PATH.
-
-### 3. Baixar dependências do projeto
-
-Na raiz do projeto:
-
-```bash
 mvn clean install -DskipTests
 ```
-
-O Maven baixa automaticamente JUnit, Mockito, JaCoCo e demais bibliotecas definidas no `pom.xml`. **Não é necessário instalar JUnit manualmente.**
 
 ---
 
 ## Como executar os testes
 
-### Rodar todos os testes
-
 ```bash
-mvn test
+mvn test                              # todos os testes
+mvn test -Dtest=CategoriaTest         # teste específico
+mvn clean verify                      # testes + cobertura (JaCoCo)
 ```
 
-### Rodar um teste específico
-
-```bash
-mvn test -Dtest=CategoriaTest
-```
-
-### Rodar testes e gerar relatório de cobertura (JaCoCo)
-
-```bash
-mvn clean test jacoco:report
-```
-
-Após executar, abra o relatório HTML em:
-
-```
-target/site/jacoco/index.html
-```
-
-A meta da A3 é atingir **≥ 75% de cobertura** nas classes de modelo, DAO, controllers e REST.
-
-### Executar testes pela IDE
-
-**IntelliJ IDEA:** clique com o botão direito em `src/test/java` → *Run 'All Tests'*  
-**VS Code:** abra um arquivo `*Test.java` → ícone *Run Test* acima do método `@Test`
+Relatório de cobertura: `target/site/jacoco/index.html`  
+Meta da A3: **≥ 75%** nas classes de modelo, DAO, controllers e REST.
 
 ---
 
 ## Estratégia de testes do grupo
 
-| Tipo | O que testar | Ferramenta | Pasta sugerida |
-|------|--------------|------------|----------------|
+| Tipo | O que testar | Ferramenta | Pasta |
+|------|--------------|------------|-------|
 | Unitário | Modelos, regras de negócio | JUnit 5 + Mockito | `src/test/java/modelo/` |
-| Integração | DAOs com banco em memória | JUnit 5 + H2 (a adicionar) | `src/test/java/dao/` |
+| Integração | DAOs | JUnit 5 + Mockito | `src/test/java/dao/` |
 | API REST | Endpoints JSON | JUnit 5 + Jersey Test | `src/test/java/controller/rest/` |
 | Regressão | Suite completa na CI | GitHub Actions | `.github/workflows/` |
 
-### Distribuição de testes unitários (atualizar conforme o grupo avançar)
+### Distribuição de testes por integrante
 
 | Integrante | Funcionalidade | Arquivo(s) de teste |
 |------------|----------------|---------------------|
@@ -179,74 +117,42 @@ A meta da A3 é atingir **≥ 75% de cobertura** nas classes de modelo, DAO, con
 | André Ghizoni Pereira Silva | Servlets / controllers web | `src/test/java/controller/*Test.java` |
 | João Vitor Cardoso de Jesus | API REST + CI/SonarCloud | `src/test/java/controller/rest/*Test.java`, `.github/`, `sonar-project.properties` |
 
-> Cada integrante deve commitar **apenas os arquivos de código-fonte que desenvolveu**, com mensagens claras e atômicas.
+> Cada integrante commita **apenas os arquivos que desenvolveu**, com mensagens claras e atômicas.
 
 ---
 
 ## Ferramentas de qualidade (A3)
 
-| Ferramenta | Finalidade | Status |
-|------------|------------|--------|
-| **JUnit 5** | Testes unitários | Configurado no `pom.xml` |
-| **Mockito** | Mocks e isolamento de dependências | Configurado no `pom.xml` |
-| **JaCoCo** | Medição de cobertura de código | Configurado no `pom.xml` |
-| **GitHub Actions** | CI — testes automáticos a cada push | `.github/workflows/ci.yml` |
-| **SonarCloud** | Análise estática e quality gate | [`sonar-project.properties`](sonar-project.properties) — [painel público](https://sonarcloud.io/project/overview?id=bulinrutss_A3-Desempenho-de-compreens-o) |
+| Ferramenta | Finalidade | Onde |
+|------------|------------|------|
+| **JUnit 5** | Testes unitários | `pom.xml` |
+| **Mockito** | Mocks e isolamento | `pom.xml` |
+| **JaCoCo** | Cobertura de código | `pom.xml` / `target/site/jacoco/` |
+| **GitHub Actions** | CI a cada push na `main` | `.github/workflows/ci.yml` |
+| **SonarCloud** | Análise estática e quality gate | `sonar-project.properties` |
 
-### Configurar SonarCloud (uma vez)
+### SonarCloud — conferência
 
-1. Criar conta em [sonarcloud.io](https://sonarcloud.io) e importar este repositório GitHub
-2. Confirmar `projectKey` e `organization` em `sonar-project.properties` (padrão: `bulinrutss` / `bulinrutss_A3-Desempenho-de-compreens-o`)
-3. Gerar token em **My Account → Security**
-4. No GitHub: **Settings → Secrets and variables → Actions** → criar secret `SONAR_TOKEN` com o token
-5. Após o primeiro push na `main`, a CI roda testes + análise SonarCloud automaticamente
+O painel do projeto é **público** e atualizado automaticamente pela CI a cada push na `main`:
 
-**Conferência pelo professor:** o painel do projeto é **público** e atualizado pela CI a cada push na `main`:
+**https://sonarcloud.io/project/overview?id=bulinrutss_A3-Desempenho-de-compreens-o**
 
-https://sonarcloud.io/project/overview?id=bulinrutss_A3-Desempenho-de-compreens-o
-
-### Executar análise localmente (opcional)
-
-```bash
-mvn clean verify sonar:sonar -Dsonar.login=SEU_TOKEN
-```
+- **Organização:** `bulinrutss`
+- **Project key:** `bulinrutss_A3-Desempenho-de-compreens-o`
+- **CI:** GitHub Actions (testes + análise SonarCloud)
 
 ---
 
-## Como executar o sistema (uso normal)
+## Como executar o sistema
 
-### Aplicação Desktop
+**Desktop:**
 
 ```bash
 mvn clean package
 java -jar target/ControleEstoque-1.0-jar-with-dependencies.jar
 ```
 
-### Aplicação Web / API REST
-
-```bash
-cd web-app
-mvn clean package
-# Copiar target/controle-estoque-web.war para TOMCAT_HOME/webapps/
-# Acessar: http://localhost:8080/controle-estoque-web
-```
-
-> Guia completo: [docs/DEPLOY-TOMCAT.md](./docs/DEPLOY-TOMCAT.md)
-
----
-
-## Convenção de commits
-
-Use mensagens curtas e descritivas:
-
-```
-test: adiciona testes unitários para CategoriaDAO.inserir
-fix: corrige validação de quantidade mínima em Produto
-refactor: extrai lógica de movimentação para método reutilizável
-ci: adiciona workflow de testes no GitHub Actions
-```
-
-**Não contabilizam para nota individual:** commits apenas em README, `pom.xml`, imagens ou documentação.
+**Web / API REST:** ver [docs/DEPLOY-TOMCAT.md](./docs/DEPLOY-TOMCAT.md)
 
 ---
 
@@ -280,7 +186,7 @@ ci: adiciona workflow de testes no GitHub Actions
 | Maven | 3.6+ | Build e testes |
 | MySQL | 8.0+ | Banco de dados |
 | JUnit 5 | 5.10.2 | Testes unitários |
-| Mockito | 4.11.0 | Mocks nos testes |
+| Mockito | 5.14.2 | Mocks nos testes |
 | JaCoCo | 0.8.12 | Cobertura de código |
 | Swing | — | Interface desktop |
 | Servlet/JSP | 4.0.1 / 2.3.3 | Interface web |
