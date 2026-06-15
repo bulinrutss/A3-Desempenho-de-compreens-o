@@ -78,6 +78,57 @@ class CategoriaDAOTest {
     }
 
     @Test
+    void atualizar_deveExecutarUpdate() throws Exception {
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeUpdate()).thenReturn(1);
+
+        Categoria categoria = new Categoria(1, "Bebidas", "1L", "Caixa");
+
+        try (MockedConstruction<Conexao> ignored = mockarConexao(conn)) {
+            new CategoriaDAO().atualizar(categoria);
+            verify(stmt).executeUpdate();
+        }
+    }
+
+    @Test
+    void excluir_deveExecutarDelete() throws Exception {
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeUpdate()).thenReturn(1);
+
+        try (MockedConstruction<Conexao> ignored = mockarConexao(conn)) {
+            new CategoriaDAO().excluir(1);
+            verify(stmt).executeUpdate();
+        }
+    }
+
+    @Test
+    void listarTodas_deveRetornarCategoriasQuandoExistemRegistros() throws Exception {
+        Connection conn = mock(Connection.class);
+        java.sql.Statement stmt = mock(java.sql.Statement.class);
+        ResultSet rs = mock(ResultSet.class);
+
+        when(conn.createStatement()).thenReturn(stmt);
+        when(stmt.executeQuery(anyString())).thenReturn(rs);
+        when(rs.next()).thenReturn(true, false);
+        when(rs.getInt("id")).thenReturn(1);
+        when(rs.getString("nome")).thenReturn("Bebidas");
+        when(rs.getString("tamanho")).thenReturn("500ml");
+        when(rs.getString("embalagem")).thenReturn("Garrafa");
+
+        try (MockedConstruction<Conexao> ignored = mockarConexao(conn)) {
+            List<Categoria> categorias = new CategoriaDAO().listarTodas();
+            assertEquals(1, categorias.size());
+            assertEquals("Bebidas", categorias.get(0).getNome());
+        }
+    }
+
+    @Test
     void inserir_deveExecutarInsert() throws Exception {
         Connection conn = mock(Connection.class);
         PreparedStatement stmt = mock(PreparedStatement.class);

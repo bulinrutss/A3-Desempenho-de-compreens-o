@@ -94,6 +94,84 @@ class MovimentacaoDAOTest {
     }
 
     @Test
+    void registrarMovimento_deveAtualizarEstoqueEmSaida() throws Exception {
+        Connection conn = mock(Connection.class);
+        PreparedStatement insertStmt = mock(PreparedStatement.class);
+        PreparedStatement updateStmt = mock(PreparedStatement.class);
+
+        when(conn.prepareStatement(anyString())).thenReturn(insertStmt, updateStmt);
+        when(insertStmt.executeUpdate()).thenReturn(1);
+        when(updateStmt.executeUpdate()).thenReturn(1);
+
+        Produto produto = new Produto(1, "Cafe", 8.0, "UN", 10, 2, 100, null);
+        Movimentacao movimentacao = new Movimentacao();
+        movimentacao.setTipo("SAIDA");
+        movimentacao.setQuantidade(3);
+        movimentacao.setProduto(produto);
+
+        try (MockedConstruction<Conexao> ignored = mockarConexao(conn)) {
+            new MovimentacaoDAO().registrarMovimento(movimentacao);
+            verify(updateStmt).setInt(1, 7);
+        }
+    }
+
+    @Test
+    void listarPorProduto_deveRetornarMovimentacoes() throws Exception {
+        Connection conn = mock(Connection.class);
+        PreparedStatement stmt = mock(PreparedStatement.class);
+        ResultSet rs = mock(ResultSet.class);
+        LocalDateTime data = LocalDateTime.of(2026, 3, 10, 12, 0);
+
+        when(conn.prepareStatement(anyString())).thenReturn(stmt);
+        when(stmt.executeQuery()).thenReturn(rs);
+        when(rs.next()).thenReturn(true, false);
+        when(rs.getInt("m_id")).thenReturn(1);
+        when(rs.getString("tipo")).thenReturn("ENTRADA");
+        when(rs.getInt("quantidade")).thenReturn(5);
+        when(rs.getTimestamp("data_movimento")).thenReturn(Timestamp.valueOf(data));
+        when(rs.getInt("p_id")).thenReturn(1);
+        when(rs.getString("nome")).thenReturn("Cafe");
+        when(rs.getDouble("preco_unitario")).thenReturn(8.0);
+        when(rs.getString("unidade")).thenReturn("UN");
+        when(rs.getInt("quantidade_minima")).thenReturn(2);
+        when(rs.getInt("quantidade_maxima")).thenReturn(100);
+
+        try (MockedConstruction<Conexao> ignored = mockarConexao(conn)) {
+            List<Movimentacao> movimentacoes = new MovimentacaoDAO().listarPorProduto(1);
+            assertEquals(1, movimentacoes.size());
+            assertEquals("ENTRADA", movimentacoes.get(0).getTipo());
+        }
+    }
+
+    @Test
+    void listarTodas_deveRetornarMovimentacoesQuandoExistemRegistros() throws Exception {
+        Connection conn = mock(Connection.class);
+        java.sql.Statement stmt = mock(java.sql.Statement.class);
+        ResultSet rs = mock(ResultSet.class);
+        LocalDateTime data = LocalDateTime.of(2026, 3, 10, 12, 0);
+
+        when(conn.createStatement()).thenReturn(stmt);
+        when(stmt.executeQuery(anyString())).thenReturn(rs);
+        when(rs.next()).thenReturn(true, false);
+        when(rs.getInt("m_id")).thenReturn(1);
+        when(rs.getString("tipo")).thenReturn("SAIDA");
+        when(rs.getInt("quantidade")).thenReturn(2);
+        when(rs.getTimestamp("data_movimento")).thenReturn(Timestamp.valueOf(data));
+        when(rs.getInt("p_id")).thenReturn(1);
+        when(rs.getString("nome")).thenReturn("Cafe");
+        when(rs.getDouble("preco_unitario")).thenReturn(8.0);
+        when(rs.getString("unidade")).thenReturn("UN");
+        when(rs.getInt("quantidade_minima")).thenReturn(2);
+        when(rs.getInt("quantidade_maxima")).thenReturn(100);
+
+        try (MockedConstruction<Conexao> ignored = mockarConexao(conn)) {
+            List<Movimentacao> movimentacoes = new MovimentacaoDAO().listarTodas();
+            assertEquals(1, movimentacoes.size());
+            assertEquals("SAIDA", movimentacoes.get(0).getTipo());
+        }
+    }
+
+    @Test
     void listarTodas_deveRetornarListaVazia() throws Exception {
         Connection conn = mock(Connection.class);
         java.sql.Statement stmt = mock(java.sql.Statement.class);

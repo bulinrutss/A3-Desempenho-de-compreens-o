@@ -8,6 +8,13 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 class ProdutoTest {
 
     @Test
+    void deveCriarProdutoVazioComConstrutorPadrao() {
+        Produto produto = new Produto();
+        assertEquals(0, produto.getId());
+        assertEquals(0, produto.getQuantidadeEstoque());
+    }
+
+    @Test
     void deveCriarProdutoComConstrutorParametrizado() {
         Categoria categoria = new Categoria(1, "Bebidas", "500ml", "Garrafa");
         Produto produto = new Produto(10, "Refrigerante", 5.50, "UN", 100, 10, 500, categoria);

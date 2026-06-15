@@ -92,4 +92,26 @@ class RelatorioRestControllerTest {
             assertEquals(3, resultado.get("total"));
         }
     }
+
+    @Test
+    void balancoFinanceiro_deveRetornarTotaisDoEstoque() {
+        try (MockedConstruction<ProdutoDAO> ignored = mockConstruction(ProdutoDAO.class, (mock, ctx) ->
+                when(mock.listarTodos()).thenReturn(criarProdutosExemplo()))) {
+
+            Response response = new RelatorioRestController().balancoFinanceiro();
+            Map<?, ?> balanco = (Map<?, ?>) response.getEntity();
+
+            assertEquals(200, response.getStatus());
+            assertEquals(250.0, balanco.get("valorTotalEstoque"));
+            assertEquals(3, balanco.get("totalProdutosCadastrados"));
+            assertEquals(43, balanco.get("totalItensEstoque"));
+        }
+    }
+
+    @Test
+    void errorResponse_deveRetornarMensagemEStatus() {
+        RelatorioRestController.ErrorResponse error = new RelatorioRestController.ErrorResponse("falha");
+        assertEquals("falha", error.getMessage());
+        assertEquals("error", error.getStatus());
+    }
 }

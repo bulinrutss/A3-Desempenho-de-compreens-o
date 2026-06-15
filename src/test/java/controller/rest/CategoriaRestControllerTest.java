@@ -33,6 +33,19 @@ class CategoriaRestControllerTest {
     }
 
     @Test
+    void buscarPorId_deveRetornarOkQuandoEncontrada() {
+        Categoria categoria = new Categoria(1, "Bebidas", "500ml", "Garrafa");
+
+        try (MockedConstruction<CategoriaDAO> ignored = mockConstruction(CategoriaDAO.class, (mock, ctx) ->
+                when(mock.buscarPorId(1)).thenReturn(categoria))) {
+
+            Response response = new CategoriaRestController().buscarPorId(1);
+            assertEquals(200, response.getStatus());
+            assertEquals(categoria, response.getEntity());
+        }
+    }
+
+    @Test
     void buscarPorId_deveRetornarNotFoundQuandoNaoExiste() {
         try (MockedConstruction<CategoriaDAO> ignored = mockConstruction(CategoriaDAO.class, (mock, ctx) ->
                 when(mock.buscarPorId(99)).thenReturn(null))) {
@@ -53,6 +66,61 @@ class CategoriaRestControllerTest {
             Response response = new CategoriaRestController().criar(dto);
             assertEquals(201, response.getStatus());
             verify(mocked.constructed().get(0)).inserir(org.mockito.ArgumentMatchers.any(Categoria.class));
+        }
+    }
+
+    @Test
+    void atualizar_deveRetornarOkQuandoCategoriaExiste() {
+        Categoria existente = new Categoria(1, "Bebidas", "500ml", "Garrafa");
+        CategoriaRestController.CategoriaDTO dto = new CategoriaRestController.CategoriaDTO();
+        dto.setNome("Bebidas Light");
+        dto.setTamanho("350ml");
+        dto.setEmbalagem("Lata");
+
+        try (MockedConstruction<CategoriaDAO> mocked = mockConstruction(CategoriaDAO.class, (mock, ctx) ->
+                when(mock.buscarPorId(1)).thenReturn(existente))) {
+
+            Response response = new CategoriaRestController().atualizar(1, dto);
+            assertEquals(200, response.getStatus());
+            verify(mocked.constructed().get(0)).atualizar(org.mockito.ArgumentMatchers.any(Categoria.class));
+        }
+    }
+
+    @Test
+    void atualizar_deveRetornarNotFoundQuandoCategoriaNaoExiste() {
+        CategoriaRestController.CategoriaDTO dto = new CategoriaRestController.CategoriaDTO();
+        dto.setNome("Bebidas");
+        dto.setTamanho("500ml");
+        dto.setEmbalagem("Garrafa");
+
+        try (MockedConstruction<CategoriaDAO> ignored = mockConstruction(CategoriaDAO.class, (mock, ctx) ->
+                when(mock.buscarPorId(99)).thenReturn(null))) {
+
+            Response response = new CategoriaRestController().atualizar(99, dto);
+            assertEquals(404, response.getStatus());
+        }
+    }
+
+    @Test
+    void excluir_deveRetornarOkQuandoCategoriaExiste() {
+        Categoria categoria = new Categoria(1, "Bebidas", "500ml", "Garrafa");
+
+        try (MockedConstruction<CategoriaDAO> mocked = mockConstruction(CategoriaDAO.class, (mock, ctx) ->
+                when(mock.buscarPorId(1)).thenReturn(categoria))) {
+
+            Response response = new CategoriaRestController().excluir(1);
+            assertEquals(200, response.getStatus());
+            verify(mocked.constructed().get(0)).excluir(1);
+        }
+    }
+
+    @Test
+    void excluir_deveRetornarNotFoundQuandoCategoriaNaoExiste() {
+        try (MockedConstruction<CategoriaDAO> ignored = mockConstruction(CategoriaDAO.class, (mock, ctx) ->
+                when(mock.buscarPorId(99)).thenReturn(null))) {
+
+            Response response = new CategoriaRestController().excluir(99);
+            assertEquals(404, response.getStatus());
         }
     }
 

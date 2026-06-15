@@ -51,4 +51,9 @@ class CorsFilterTest {
         verify(response).setStatus(statusCaptor.capture());
         assertEquals(HttpServletResponse.SC_OK, statusCaptor.getValue());
     }
+
+    @Test
+    void deveExecutarDestroySemErros() {
+        filter.destroy();
+    }
 }
