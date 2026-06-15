@@ -33,6 +33,10 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: >
           mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.organization=bulinrutss
+          -Dsonar.projectKey=bulinrutss_A3-Desempenho-de-compreens-o
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }}
           -Dsonar.qualitygate.wait=true
           -Dsonar.coverage.exclusions=**/visao/**,**/ControleEstoque.java,**/dao/Conexao.java
 
