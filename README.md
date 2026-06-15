@@ -191,7 +191,7 @@ A meta da A3 é atingir **≥ 75% de cobertura** nas classes de modelo, DAO, con
 | **Mockito** | Mocks e isolamento de dependências | Configurado no `pom.xml` |
 | **JaCoCo** | Medição de cobertura de código | Configurado no `pom.xml` |
 | **GitHub Actions** | CI — testes automáticos a cada push | `.github/workflows/ci.yml` |
-| **SonarCloud** | Análise estática e quality gate | `sonar-project.properties` |
+| **SonarCloud** | Análise estática e quality gate | [`sonar-project.properties`](sonar-project.properties) — [painel público](https://sonarcloud.io/project/overview?id=bulinrutss_A3-Desempenho-de-compreens-o) |
 
 ### Configurar SonarCloud (uma vez)
 
@@ -200,6 +200,10 @@ A meta da A3 é atingir **≥ 75% de cobertura** nas classes de modelo, DAO, con
 3. Gerar token em **My Account → Security**
 4. No GitHub: **Settings → Secrets and variables → Actions** → criar secret `SONAR_TOKEN` com o token
 5. Após o primeiro push na `main`, a CI roda testes + análise SonarCloud automaticamente
+
+**Conferência pelo professor:** o painel do projeto é **público** e atualizado pela CI a cada push na `main`:
+
+https://sonarcloud.io/project/overview?id=bulinrutss_A3-Desempenho-de-compreens-o
 
 ### Executar análise localmente (opcional)
 
@@ -297,6 +301,7 @@ ci: adiciona workflow de testes no GitHub Actions
 ## Links
 
 - **Repositório GitHub:** https://github.com/bulinrutss/A3-Desempenho-de-compreens-o
+- **SonarCloud (análise estática — público):** https://sonarcloud.io/project/overview?id=bulinrutss_A3-Desempenho-de-compreens-o
 - **Aplicação web (legado):** https://estoquejava.ruts.dev/
 
 ---
